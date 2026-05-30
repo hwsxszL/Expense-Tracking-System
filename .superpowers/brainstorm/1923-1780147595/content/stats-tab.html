@@ -1,0 +1,95 @@
+<h2>统计页 — 布局方案</h2>
+<p class="subtitle">Tab 2：分类汇总 + 图表展示</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>卡片概览 + 饼图 + 分类列表</h3>
+      <p>顶部是收支总览卡片，中间是饼图（按分类），下面是可排序的分类明细表。</p>
+      <div class="mockup">
+        <div class="mockup-header">预览：布局 A</div>
+        <div class="mockup-body">
+          <div style="display:flex;gap:12px;margin-bottom:12px;">
+            <div style="flex:1;background:#e8f5e9;border-radius:8px;padding:16px;text-align:center;">
+              <div style="font-size:12px;color:#666;">本月收入</div>
+              <div style="font-size:24px;font-weight:bold;color:#2ecc71;">+1,000.00</div>
+            </div>
+            <div style="flex:1;background:#fce4ec;border-radius:8px;padding:16px;text-align:center;">
+              <div style="font-size:12px;color:#666;">本月支出</div>
+              <div style="font-size:24px;font-weight:bold;color:#e74c3c;">-341.00</div>
+            </div>
+            <div style="flex:1;background:#e3f2fd;border-radius:8px;padding:16px;text-align:center;">
+              <div style="font-size:12px;color:#666;">本月结余</div>
+              <div style="font-size:24px;font-weight:bold;color:#1976d2;">+659.00</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:16px;">
+            <div style="flex:1;background:#fff;border:1px solid #eee;border-radius:8px;padding:16px;text-align:center;">
+              <div style="font-weight:bold;margin-bottom:8px;">支出分类占比</div>
+              <div class="placeholder" style="height:150px;">🥧 饼图区域</div>
+            </div>
+            <div style="flex:1;background:#fff;border:1px solid #eee;border-radius:8px;overflow:hidden;">
+              <div style="padding:8px 12px;background:#fafafa;border-bottom:1px solid #eee;font-size:13px;font-weight:bold;">支出明细</div>
+              <div style="display:flex;justify-content:space-between;padding:8px 12px;border-bottom:1px solid #f0f0f0;font-size:13px;">
+                <span>🍔 餐饮</span><span>12笔</span><span style="color:#e74c3c;">210.00</span><span>61.6%</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:8px 12px;border-bottom:1px solid #f0f0f0;font-size:13px;">
+                <span>🚇 交通</span><span>5笔</span><span style="color:#e74c3c;">66.00</span><span>19.4%</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:8px 12px;font-size:13px;">
+                <span>🛒 购物</span><span>2笔</span><span style="color:#e74c3c;">65.00</span><span>19.0%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>时间趋势优先</h3>
+      <p>强调收支变化趋势，顶部是月度趋势柱状图，下方是分类饼图和列表。</p>
+      <div class="mockup">
+        <div class="mockup-header">预览：布局 B</div>
+        <div class="mockup-body">
+          <div style="display:flex;gap:12px;margin-bottom:12px;">
+            <div style="flex:1;background:#e8f5e9;border-radius:8px;padding:16px;text-align:center;">
+              <div style="font-size:12px;color:#666;">本月收入</div>
+              <div style="font-size:20px;font-weight:bold;color:#2ecc71;">1,000</div>
+            </div>
+            <div style="flex:1;background:#fce4ec;border-radius:8px;padding:16px;text-align:center;">
+              <div style="font-size:12px;color:#666;">本月支出</div>
+              <div style="font-size:20px;font-weight:bold;color:#e74c3c;">341</div>
+            </div>
+            <div style="flex:1;background:#e3f2fd;border-radius:8px;padding:16px;text-align:center;">
+              <div style="font-size:12px;color:#666;">结余</div>
+              <div style="font-size:20px;font-weight:bold;color:#1976d2;">659</div>
+            </div>
+          </div>
+          <div style="background:#fff;border:1px solid #eee;border-radius:8px;padding:16px;margin-bottom:12px;">
+            <div style="font-weight:bold;margin-bottom:8px;">近6个月收支趋势</div>
+            <div class="placeholder" style="height:120px;">📊 柱状图区域（月度对比）</div>
+          </div>
+          <div style="display:flex;gap:16px;">
+            <div style="flex:1;background:#fff;border:1px solid #eee;border-radius:8px;padding:16px;text-align:center;">
+              <div style="font-weight:bold;margin-bottom:8px;">本月分类占比</div>
+              <div class="placeholder" style="height:130px;">🥧 饼图区域</div>
+            </div>
+            <div style="flex:1;background:#fff;border:1px solid #eee;border-radius:8px;">
+              <div style="padding:8px 12px;background:#fafafa;border-bottom:1px solid #eee;font-size:13px;font-weight:bold;">分类排行</div>
+              <div style="display:flex;justify-content:space-between;padding:8px 12px;border-bottom:1px solid #f0f0f0;font-size:13px;">
+                <span>1. 🍔 餐饮</span><span style="color:#e74c3c;">210.00</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:8px 12px;font-size:13px;">
+                <span>2. 🚇 交通</span><span style="color:#e74c3c;">66.00</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

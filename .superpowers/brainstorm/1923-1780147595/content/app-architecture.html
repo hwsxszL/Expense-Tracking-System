@@ -1,0 +1,40 @@
+<h2>记账小系统 — 架构方案对比</h2>
+<p class="subtitle">纯前端、localStorage 存储、桌面 Web 端</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>单页全功能</h3>
+      <p>所有功能在一页上：顶部是记账表单，下面是交易列表，侧边有统计摘要。无需切换页面，一目了然。</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>优点</h4><ul><li>所见即所得，无需导航</li><li>开发最简单</li><li>适合少量功能</li></ul></div>
+        <div class="cons"><h4>缺点</h4><ul><li>功能多了会拥挤</li><li>统计区域空间有限</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>双页标签式（推荐）</h3>
+      <p>"记账"和"统计"两个 Tab 页切换。记账页专注录入和查看流水，统计页用图表展示分类汇总。</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>优点</h4><ul><li>职责清晰，各页面不拥挤</li><li>统计可以做得更丰富</li><li>后续加功能也方便</li></ul></div>
+        <div class="cons"><h4>缺点</h4><ul><li>需要在两个页面间切换</li><li>稍微多一点开发量</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>电子表格风格</h3>
+      <p>像一个精简的 Excel，所有记录按行排列，字段以列展示，可以直接在表格中编辑。统计用表格透视或简单图表。</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>优点</h4><ul><li>数据密度高，批量操作方便</li><li>适合习惯表格的用户</li></ul></div>
+        <div class="cons"><h4>缺点</h4><ul><li>录入体验不如表单</li><li>移动端几乎不可用</li><li>视觉上不够温暖</li></ul></div>
+      </div>
+    </div>
+  </div>
+</div>
