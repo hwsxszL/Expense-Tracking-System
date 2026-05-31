@@ -18,10 +18,10 @@ window.BK.ui = window.BK.ui || {};
 
     container.innerHTML = '' +
       // 月份选择器
-      '<div style="display:flex;justify-content:flex-end;margin-bottom:16px;">' +
-      '  <select id="stats-month-select" style="padding:6px 12px;border:1px solid var(--color-border);border-radius:6px;">' +
+      '<div class="month-select-wrap">' +
+      '  <select id="stats-month-select">' +
            availableMonths.map(function(m) {
-             return '<option value="' + m + '"' + (m === monthKey ? ' selected' : '') + '>' + m + '</option>';
+             return '<option value="' + m + '"' + (m === monthKey ? ' selected' : '') + '>📅 ' + m + '</option>';
            }).join('') +
       '  </select>' +
       '</div>' +
@@ -29,14 +29,17 @@ window.BK.ui = window.BK.ui || {};
       // 概览卡片
       '<div class="stats-cards">' +
       '  <div class="stat-card income-card">' +
+      '    <span class="stat-icon">💰</span>' +
       '    <div class="stat-label">本月收入</div>' +
       '    <div class="stat-value text-income">+' + stats.totalIncome.toFixed(2) + '</div>' +
       '  </div>' +
       '  <div class="stat-card expense-card">' +
+      '    <span class="stat-icon">💳</span>' +
       '    <div class="stat-label">本月支出</div>' +
       '    <div class="stat-value text-expense">-' + stats.totalExpense.toFixed(2) + '</div>' +
       '  </div>' +
       '  <div class="stat-card balance-card">' +
+      '    <span class="stat-icon">🏦</span>' +
       '    <div class="stat-label">本月结余</div>' +
       '    <div class="stat-value" style="color:' + (stats.balance >= 0 ? 'var(--color-balance)' : 'var(--color-expense)') + '">' +
            (stats.balance >= 0 ? '+' : '') + stats.balance.toFixed(2) +
@@ -47,18 +50,18 @@ window.BK.ui = window.BK.ui || {};
       // 图表区
       '<div class="stats-charts">' +
       '  <div class="card chart-container">' +
-      '    <h3 style="margin-bottom:12px;">近6月收支趋势</h3>' +
+      '    <h3>📊 近6月收支趋势</h3>' +
       '    <canvas id="trend-chart" height="200"></canvas>' +
       '  </div>' +
       '  <div class="card chart-container">' +
-      '    <h3 style="margin-bottom:12px;">本月分类占比</h3>' +
+      '    <h3>🥧 本月分类占比</h3>' +
       '    <canvas id="pie-chart" height="200"></canvas>' +
       '  </div>' +
       '</div>' +
 
       // 分类排行
       '<div class="card" style="margin-top:16px;">' +
-      '  <h3 style="margin-bottom:8px;">分类排行</h3>' +
+      '  <h3 style="margin-bottom:12px;">🏆 分类排行</h3>' +
       '  ' + renderCategoryRanking(stats.byCategory, stats.totalExpense + stats.totalIncome) +
       '</div>';
 
@@ -81,16 +84,15 @@ window.BK.ui = window.BK.ui || {};
       var pct = total > 0 ? ((item.total / total) * 100).toFixed(1) : '0.0';
       var barWidth = total > 0 ? Math.max((item.total / total) * 100, 2) : 0;
       var colorClass = item.type === 'income' ? 'text-income' : 'text-expense';
-      return '<div style="display:flex;align-items:center;padding:8px 0;border-bottom:1px solid var(--color-border);">' +
-        '<span style="width:24px;color:var(--color-subtext);">' + (i + 1) + '.</span>' +
-        '<span style="width:80px;">' + item.categoryIcon + ' ' + item.categoryName + '</span>' +
-        '<span style="flex:1;margin:0 12px;">' +
-        '  <div style="background:#f0f4ff;border-radius:4px;height:8px;overflow:hidden;">' +
-        '    <div style="background:' + (item.type === 'income' ? 'var(--color-income)' : 'var(--color-expense)') + ';height:100%;width:' + barWidth + '%;border-radius:4px;"></div>' +
-        '  </div>' +
+      var rankClass = i < 3 ? ' top' : '';
+      return '<div class="ranking-item">' +
+        '<span class="rank-num' + rankClass + '">' + (i + 1) + '</span>' +
+        '<span class="rank-label">' + item.categoryIcon + ' ' + item.categoryName + '</span>' +
+        '<span class="rank-bar-wrap">' +
+        '  <div class="rank-bar" style="background:' + (item.type === 'income' ? 'var(--color-income)' : 'var(--color-expense)') + ';width:' + barWidth + '%;"></div>' +
         '</span>' +
-        '<span class="' + colorClass + '" style="width:80px;text-align:right;">' + BK.formatCurrency(item.total, item.type) + '</span>' +
-        '<span style="width:50px;text-align:right;color:var(--color-subtext);font-size:12px;">' + pct + '%</span>' +
+        '<span class="rank-amount ' + colorClass + '">' + BK.formatCurrency(item.total, item.type) + '</span>' +
+        '<span class="rank-pct">' + pct + '%</span>' +
         '</div>';
     }).join('');
   }
@@ -110,13 +112,13 @@ window.BK.ui = window.BK.ui || {};
             {
               label: '支出',
               data: trend.map(function(t) { return t.expense; }),
-              backgroundColor: '#e74c3c',
+              backgroundColor: '#ef4444',
               borderRadius: 4
             },
             {
               label: '收入',
               data: trend.map(function(t) { return t.income; }),
-              backgroundColor: '#2ecc71',
+              backgroundColor: '#10b981',
               borderRadius: 4
             }
           ]
@@ -143,8 +145,8 @@ window.BK.ui = window.BK.ui || {};
           datasets: [{
             data: expenseData.map(function(c) { return c.total; }),
             backgroundColor: [
-              '#e74c3c', '#e67e22', '#f1c40f', '#2ecc71', '#3498db',
-              '#9b59b6', '#1abc9c', '#e91e63', '#00bcd4', '#ff5722'
+              '#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6',
+              '#ec4899', '#06b6d4', '#f97316', '#14b8a6', '#6366f1'
             ]
           }]
         },

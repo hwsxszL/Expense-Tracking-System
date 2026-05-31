@@ -40,7 +40,7 @@ window.BK.ui = window.BK.ui || {};
       '      <label for="tx-note">备注（可选）</label>' +
       '      <input type="text" id="tx-note" placeholder="如：午餐" maxlength="100">' +
       '    </div>' +
-      '    <button class="btn btn-primary" id="btn-submit" style="width:100%;padding:10px;">记一笔</button>' +
+      '    <button class="btn btn-primary" id="btn-submit" style="width:100%;padding:12px;font-size:15px;">✏️ 记一笔</button>' +
       '    <button class="btn btn-small" id="btn-manage-cat" style="margin-top:8px;width:100%;color:var(--color-subtext);">管理分类</button>' +
       '  </div>' +
       // 右侧列表
@@ -63,8 +63,9 @@ window.BK.ui = window.BK.ui || {};
   function renderTransactionList(transactions, categories) {
     if (!transactions || transactions.length === 0) {
       return '<div class="empty-state">' +
-        '<div class="icon">📝</div>' +
+        '<span class="icon">📝</span>' +
         '<p>还没有记录，记下第一笔吧！</p>' +
+        '<p class="hint">在左侧填写金额和分类，开始记账</p>' +
         '</div>';
     }
 
