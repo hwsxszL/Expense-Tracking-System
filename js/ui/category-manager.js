@@ -81,7 +81,7 @@ window.BK.ui = window.BK.ui || {};
       });
 
       // 删除分类（事件委托在 overlay 上，只绑定一次）
-      overlay.addEventListener('click', function(e) {
+      overlay.addEventListener('click', async function(e) {
         if (!e.target.classList.contains('cat-delete')) return;
 
         var id = e.target.dataset.id;
@@ -94,7 +94,7 @@ window.BK.ui = window.BK.ui || {};
           : '确认删除分类「' + cat.icon + ' ' + cat.name + '」？';
 
         if (confirm(msg)) {
-          var result = BK.deleteCategory(categories, id, transactions);
+          var result = await BK.deleteCategory(categories, id, transactions);
           // 更新引用（categories 和 transactions 来自外部，需原地替换）
           categories.length = 0;
           result.categories.forEach(function(c) { categories.push(c); });
@@ -117,11 +117,12 @@ window.BK.ui = window.BK.ui || {};
     });
 
     // 添加分类按钮
-    overlay.querySelector('#btn-add-cat').addEventListener('click', function() {
+    overlay.querySelector('#btn-add-cat').addEventListener('click', async function() {
       var type = overlay.querySelector('#new-cat-type').value;
       var icon = overlay.querySelector('#new-cat-icon').value.trim() || '✨';
       var name = overlay.querySelector('#new-cat-name').value.trim();
       var errorEl = overlay.querySelector('#add-cat-error');
+      var addBtn = overlay.querySelector('#btn-add-cat');
 
       var validation = BK.validateCategoryName(categories, name, type);
       if (!validation.valid) {
@@ -129,10 +130,22 @@ window.BK.ui = window.BK.ui || {};
         return;
       }
 
-      BK.addCategory(categories, { name: name, icon: icon, type: type });
+      addBtn.textContent = '...';
+      addBtn.disabled = true;
+      try {
+        await BK.addCategory(categories, { name: name, icon: icon, type: type });
+      } catch (err) {
+        errorEl.textContent = '添加失败：' + err.message;
+        addBtn.textContent = '添加';
+        addBtn.disabled = false;
+        return;
+      }
+
       overlay.querySelector('#new-cat-name').value = '';
       overlay.querySelector('#new-cat-icon').value = '✨';
       errorEl.textContent = '';
+      addBtn.textContent = '添加';
+      addBtn.disabled = false;
 
       // 刷新弹窗内容
       overlay.querySelector('.modal').innerHTML = buildModalHTML(categories);

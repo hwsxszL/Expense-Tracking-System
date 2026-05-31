@@ -1,26 +1,32 @@
-// js/transactions.js
+// js/transactions.js — 云存储版
 window.BK = window.BK || {};
 
 (function(ns) {
-  ns.addTransaction = function(transactions, data) {
+  ns.addTransaction = async function(transactions, data) {
+    var hash = ns.getUserHash();
     var tx = {
       id: ns.generateId(),
+      passphrase_hash: hash,
       type: data.type,
       amount: Number(data.amount),
-      categoryId: data.categoryId,
+      category_id: data.categoryId,
       note: data.note || '',
       date: data.date,
-      createdAt: new Date().toISOString()
+      created_at: new Date().toISOString()
     };
-    transactions.unshift(tx);
-    ns.saveTransactions(transactions);
+    await ns.insertTransaction(tx);
+    // 添加到本地数组（camelCase 版本）
+    transactions.unshift({
+      id: tx.id, type: tx.type, amount: tx.amount,
+      categoryId: tx.category_id, note: tx.note,
+      date: tx.date, createdAt: tx.created_at
+    });
     return transactions;
   };
 
-  ns.deleteTransaction = function(transactions, id) {
-    var filtered = transactions.filter(function(tx) { return tx.id !== id; });
-    ns.saveTransactions(filtered);
-    return filtered;
+  ns.deleteTransaction = async function(transactions, id) {
+    await ns.deleteTransactionRecord(id);
+    return transactions.filter(function(tx) { return tx.id !== id; });
   };
 
   ns.getAllTransactions = function(transactions) {
@@ -89,7 +95,6 @@ window.BK = window.BK || {};
     n = n || 6;
     var result = [];
     var now = new Date();
-    var currentMonth = ns.currentMonth();
 
     for (var i = n - 1; i >= 0; i--) {
       var d = new Date(now.getFullYear(), now.getMonth() - i, 1);

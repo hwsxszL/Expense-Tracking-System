@@ -7,8 +7,9 @@ redirects = []
 [functions."*"]
 
 [build]
-publish = "D:\\yuanban_agent\\test_skills"
+publish = "D:\\yuanban_agent\\test_skills\\.worktrees\\bookkeeping-app"
 publishOrigin = "default"
+base = "D:\\yuanban_agent\\test_skills\\.worktrees\\bookkeeping-app"
 
 [build.environment]
 

@@ -106,7 +106,7 @@ window.BK.ui = window.BK.ui || {};
     });
 
     // 提交
-    submitBtn.addEventListener('click', function() {
+    submitBtn.addEventListener('click', async function() {
       var amountEl = container.querySelector('#tx-amount');
       var amount = parseFloat(amountEl.value);
       if (isNaN(amount) || amount <= 0) {
@@ -124,34 +124,51 @@ window.BK.ui = window.BK.ui || {};
       var date = container.querySelector('#tx-date').value;
       var note = container.querySelector('#tx-note').value.trim();
 
-      BK.addTransaction(transactions, {
-        type: currentType,
-        amount: amount,
-        categoryId: categoryId,
-        note: note,
-        date: date
-      });
+      submitBtn.textContent = '保存中...';
+      submitBtn.disabled = true;
+
+      try {
+        await BK.addTransaction(transactions, {
+          type: currentType,
+          amount: amount,
+          categoryId: categoryId,
+          note: note,
+          date: date
+        });
+      } catch (e) {
+        alert('保存失败：' + e.message);
+        submitBtn.textContent = '✏️ 记一笔';
+        submitBtn.disabled = false;
+        return;
+      }
 
       // 清空表单
       amountEl.value = '';
       container.querySelector('#tx-note').value = '';
       amountEl.focus();
+      submitBtn.textContent = '✏️ 记一笔';
+      submitBtn.disabled = false;
 
       // 重新渲染
       ui.renderRecordTab(container, transactions, categories);
     });
 
     // 删除按钮（事件委托）
-    container.addEventListener('click', function(e) {
+    container.addEventListener('click', async function(e) {
       if (e.target.classList.contains('btn-delete')) {
         var id = e.target.dataset.id;
-        BK.deleteTransaction(transactions, id);
-        // deleteTransaction returns a new filtered array, so refresh from storage
-        if (typeof BK.refreshUI === 'function') {
-          BK.refreshUI();
-        } else {
-          ui.renderRecordTab(container, transactions, categories);
+        var btn = e.target;
+        btn.textContent = '...';
+        btn.disabled = true;
+        try {
+          await BK.deleteTransaction(transactions, id);
+        } catch (err) {
+          alert('删除失败：' + err.message);
+          btn.textContent = '删除';
+          btn.disabled = false;
+          return;
         }
+        BK.refreshUI();
       }
     });
 
