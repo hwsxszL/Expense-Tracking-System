@@ -3,10 +3,10 @@ window.BK = window.BK || {};
 
 (function(ns) {
   ns.addTransaction = async function(transactions, data) {
-    var hash = ns.getUserHash();
+    var accountId = ns.getAccountId();
     var tx = {
       id: ns.generateId(),
-      passphrase_hash: hash,
+      account_id: accountId,
       type: data.type,
       amount: Number(data.amount),
       category_id: data.categoryId,
@@ -25,8 +25,18 @@ window.BK = window.BK || {};
   };
 
   ns.deleteTransaction = async function(transactions, id) {
+    console.log('[deleteTransaction] 开始, id:', id, '数组长度:', transactions.length);
     await ns.deleteTransactionRecord(id);
-    return transactions.filter(function(tx) { return tx.id !== id; });
+    console.log('[deleteTransaction] 数据库删除完成, 开始找本地记录...');
+    for (var i = transactions.length - 1; i >= 0; i--) {
+      if (transactions[i].id === id) {
+        console.log('[deleteTransaction] 找到匹配项, 索引:', i, 'tx.id:', transactions[i].id);
+        transactions.splice(i, 1);
+        console.log('[deleteTransaction] splice 完成, 数组长度:', transactions.length);
+        break;
+      }
+    }
+    return transactions;
   };
 
   ns.getAllTransactions = function(transactions) {

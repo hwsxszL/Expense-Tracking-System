@@ -2,7 +2,11 @@
 window.BK = window.BK || {};
 
 (function(ns) {
-  function uf() { return 'passphrase_hash=eq.' + ns.getUserHash(); }
+  function uf() {
+    var accountId = ns.getAccountId();
+    if (!accountId) throw new Error('未登录');
+    return 'account_id=eq.' + accountId;
+  }
 
   // ===== 交易记录 =====
 
@@ -27,7 +31,7 @@ window.BK = window.BK || {};
 
   ns.deleteTransactionRecord = async function(id) {
     await ns.supabaseFetch('DELETE', 'transactions', {
-      filter: 'id=eq.' + encodeURIComponent(id), prefer: 'return=minimal'
+      filter: uf() + ',id=eq.' + encodeURIComponent(id), prefer: 'return=minimal'
     });
   };
 
@@ -48,7 +52,7 @@ window.BK = window.BK || {};
 
   ns.updateCategoryRecord = async function(id, updates) {
     await ns.supabaseFetch('PATCH', 'categories', {
-      filter: 'id=eq.' + encodeURIComponent(id),
+      filter: uf() + ',id=eq.' + encodeURIComponent(id),
       body: updates,
       prefer: 'return=minimal'
     });
@@ -56,17 +60,15 @@ window.BK = window.BK || {};
 
   ns.deleteCategoryRecord = async function(id) {
     await ns.supabaseFetch('DELETE', 'categories', {
-      filter: 'id=eq.' + encodeURIComponent(id), prefer: 'return=minimal'
+      filter: uf() + ',id=eq.' + encodeURIComponent(id), prefer: 'return=minimal'
     });
   };
 
-  // 批量插入
+  // 批量插入（单次请求，原子操作）
   ns.insertCategoriesBatch = async function(cats) {
-    for (var i = 0; i < cats.length; i++) {
-      await ns.supabaseFetch('POST', 'categories', {
-        body: cats[i], prefer: 'return=minimal'
-      });
-    }
+    await ns.supabaseFetch('POST', 'categories', {
+      body: cats, prefer: 'return=minimal'
+    });
   };
 
   // 批量更新交易记录的 categoryId
@@ -76,7 +78,7 @@ window.BK = window.BK || {};
     });
     for (var i = 0; i < (txs || []).length; i++) {
       await ns.supabaseFetch('PATCH', 'transactions', {
-        filter: 'id=eq.' + encodeURIComponent(txs[i].id),
+        filter: uf() + ',id=eq.' + encodeURIComponent(txs[i].id),
         body: { category_id: toId },
         prefer: 'return=minimal'
       });

@@ -22,12 +22,12 @@ window.BK = window.BK || {};
     ];
 
     var categories = [];
-    var hash = ns.getUserHash();
+    var accountId = ns.getAccountId();
     presetExpense.forEach(function(p, i) {
-      categories.push({ id: 'preset_expense_' + i, passphrase_hash: hash, name: p.name, icon: p.icon, type: 'expense', is_preset: true });
+      categories.push({ id: 'preset_' + accountId + '_expense_' + i, account_id: accountId, name: p.name, icon: p.icon, type: 'expense', is_preset: true });
     });
     presetIncome.forEach(function(p, i) {
-      categories.push({ id: 'preset_income_' + i, passphrase_hash: hash, name: p.name, icon: p.icon, type: 'income', is_preset: true });
+      categories.push({ id: 'preset_' + accountId + '_income_' + i, account_id: accountId, name: p.name, icon: p.icon, type: 'income', is_preset: true });
     });
     return categories;
   };
@@ -37,7 +37,7 @@ window.BK = window.BK || {};
     if (existing.length === 0) {
       var presets = ns.createPresetCategories();
       await ns.insertCategoriesBatch(presets);
-      return presets;
+      return presets.map(function(c) { return normalizeCat(c); });
     }
     // 转换字段名：Supabase 用 snake_case，JS 用 camelCase
     return existing.map(function(c) { return normalizeCat(c); });
@@ -52,10 +52,10 @@ window.BK = window.BK || {};
   };
 
   ns.addCategory = async function(categories, newCat) {
-    var hash = ns.getUserHash();
+    var accountId = ns.getAccountId();
     var category = {
       id: ns.generateId(),
-      passphrase_hash: hash,
+      account_id: accountId,
       name: newCat.name.trim(),
       icon: newCat.icon || '✨',
       type: newCat.type,
@@ -123,7 +123,7 @@ window.BK = window.BK || {};
       icon: c.icon,
       type: c.type,
       isPreset: c.is_preset,
-      passphrase_hash: c.passphrase_hash
+      account_id: c.account_id
     };
   }
 })(window.BK);

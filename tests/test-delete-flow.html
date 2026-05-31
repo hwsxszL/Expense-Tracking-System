@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>删除流程测试</title>
+<style>
+body { font-family: sans-serif; margin: 20px; }
+.pass { color: green; }
+.fail { color: red; }
+pre { background: #f5f5f5; padding: 10px; border-radius: 4px; }
+button { padding: 8px 16px; margin: 4px; }
+</style>
+</head>
+<body>
+<h2>删除流程端到端测试</h2>
+<div id="log"></div>
+
+<script>
+var logEl = document.getElementById('log');
+function log(msg, cls) {
+  var p = document.createElement('p');
+  p.className = cls || '';
+  p.textContent = typeof msg === 'string' ? msg : JSON.stringify(msg);
+  logEl.appendChild(p);
+}
+
+// ====== 模拟完整的 delete 链路 ======
+
+// 1. 模拟 supabase.js 中的 delete（mock 掉网络请求）
+// 实际 app 中这是 async 的 Supabase 调用
+
+// 2. 模拟 transactions.js 中的 deleteTransaction
+function mockDeleteTransaction(transactions, id) {
+  log('[deleteTransaction] 开始, id: ' + id + ', 数组长度: ' + transactions.length);
+  // 模拟数据库删除成功
+  log('[deleteTransaction] 数据库删除完成 (mock)');
+
+  var found = false;
+  for (var i = transactions.length - 1; i >= 0; i--) {
+    if (transactions[i].id === id) {
+      log('[deleteTransaction] ✅ 找到匹配, 索引: ' + i + ', tx.id: ' + transactions[i].id);
+      transactions.splice(i, 1);
+      found = true;
+      log('[deleteTransaction] splice 完成, 新长度: ' + transactions.length);
+      break;
+    }
+  }
+  if (!found) {
+    log('[deleteTransaction] ❌ 未找到匹配的 id!', 'fail');
+    log('[deleteTransaction] 数组中所有 id: ' + transactions.map(function(t){return t.id;}).join(', '), 'fail');
+  }
+  return transactions;
+}
+
+// 3. 模拟 record.js 中的 renderTransactionList
+function mockGetAllTransactions(transactions) {
+  return transactions.slice().sort(function(a, b) {
+    return b.date.localeCompare(a.date) || b.createdAt.localeCompare(a.createdAt);
+  });
+}
+
+function mockRenderTransactionList(transactions) {
+  if (!transactions || transactions.length === 0) {
+    return '<div class="empty-state">空状态</div>';
+  }
+  var sorted = mockGetAllTransactions(transactions);
+  log('[renderTransactionList] 渲染 ' + sorted.length + ' 条记录');
+  var html = '<table><tbody>';
+  sorted.forEach(function(tx) {
+    html += '<tr data-tx-id="' + tx.id + '"><td>' + tx.id + '</td><td>' + tx.amount + '</td></tr>';
+  });
+  html += '</tbody></table>';
+  return html;
+}
+
+// 4. 模拟 record.js 中的 renderRecordTab
+function mockRenderRecordTab(container, transactions) {
+  log('[renderRecordTab] 开始渲染, 当前 transactions.length: ' + transactions.length);
+  var html = '<div class="record-list">' +
+    '<h3>流水记录</h3>' +
+    mockRenderTransactionList(transactions) +
+    '</div>';
+  container.innerHTML = html;
+  log('[renderRecordTab] innerHTML 已设置, 容器内行数: ' + container.querySelectorAll('tr').length);
+}
+
+// 5. 模拟 app.js 中的 refreshUI
+function mockRefreshUI(transactions) {
+  log('[refreshUI] transactions.length: ' + transactions.length);
+  var container = document.getElementById('main-content');
+  mockRenderRecordTab(container, transactions);
+}
+
+// ====== 测试场景 ======
+
+// 初始化数据
+var transactions = [
+  { id: "tx_001", type: "expense", amount: 35, categoryId: "cat_food", note: "午餐", date: "2026-05-30", createdAt: "2026-05-30T12:00:00Z" },
+  { id: "tx_002", type: "income", amount: 100, categoryId: "cat_salary", note: "工资", date: "2026-05-29", createdAt: "2026-05-29T09:00:00Z" },
+  { id: "tx_003", type: "expense", amount: 6, categoryId: "cat_transport", note: "地铁", date: "2026-05-28", createdAt: "2026-05-28T08:00:00Z" }
+];
+
+log('===== 初始状态 =====');
+log('transactions 长度: ' + transactions.length);
+
+// 第一次渲染（模拟 showApp 中的首次渲染）
+log('');
+log('===== 首次渲染 (模拟 showApp) =====');
+var container = document.getElementById('main-content');
+mockRenderRecordTab(container, transactions);
+
+// 添加一条记录（模拟用户记账）
+log('');
+log('===== 添加记录 (模拟 addTransaction) =====');
+var newTx = {
+  id: "tx_new_" + Date.now(),
+  type: "expense",
+  amount: 50,
+  categoryId: "cat_shopping",
+  note: "买东西",
+  date: "2026-05-31",
+  createdAt: new Date().toISOString()
+};
+transactions.unshift(newTx);
+log('添加后 transactions 长度: ' + transactions.length);
+
+// 重新渲染（模拟 add 后的 renderRecordTab 调用）
+log('');
+log('===== 添加后重渲染 =====');
+mockRenderRecordTab(container, transactions);
+
+// 删除一条记录（模拟用户点击删除）
+log('');
+log('===== 删除 tx_002 (模拟删除按钮点击) =====');
+var idToDelete = "tx_002";
+var deleteResult = mockDeleteTransaction(transactions, idToDelete);
+
+log('');
+log('===== 删除后 refreshUI =====');
+mockRefreshUI(transactions);
+
+// 验证
+log('');
+log('===== 验证 =====');
+var remainingRows = container.querySelectorAll('tr');
+var remainingIds = [];
+remainingRows.forEach(function(r) { remainingIds.push(r.dataset.txId); });
+log('页面行数: ' + remainingRows.length + ' (期望: 3)');
+log('页面 IDs: ' + remainingIds.join(', '));
+log('transactions 长度: ' + transactions.length + ' (期望: 3)');
+
+var containsDeleted = remainingIds.indexOf("tx_002") >= 0;
+if (containsDeleted) {
+  log('❌ 失败: 页面仍包含已删除的 tx_002!', 'fail');
+} else {
+  log('✅ 成功: tx_002 已从页面移除', 'pass');
+}
+
+if (transactions.length === 3) {
+  log('✅ 成功: 数组长度正确 (3)', 'pass');
+} else {
+  log('❌ 失败: 数组长度错误, 实际: ' + transactions.length, 'fail');
+}
+</script>
+
+<div id="main-content" style="border:1px solid #ccc;padding:10px;margin-top:10px;"></div>
+</body>
+</html>
