@@ -275,3 +275,48 @@ body {
 .cat-delete:hover {
   color: var(--color-expense);
 }
+
+/* 统计页 */
+.stats-cards {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.stat-card {
+  flex: 1;
+  background: var(--color-card);
+  border-radius: var(--radius);
+  padding: 20px;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+
+.stat-card.income-card { border-top: 3px solid var(--color-income); }
+.stat-card.expense-card { border-top: 3px solid var(--color-expense); }
+.stat-card.balance-card { border-top: 3px solid var(--color-balance); }
+
+.stat-label {
+  font-size: 13px;
+  color: var(--color-subtext);
+  margin-bottom: 8px;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.stats-charts {
+  display: flex;
+  gap: 16px;
+}
+
+.chart-container {
+  flex: 1;
+  min-height: 280px;
+}
+
+.chart-container canvas {
+  max-height: 220px;
+}

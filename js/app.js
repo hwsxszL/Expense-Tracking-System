@@ -4,6 +4,7 @@ window.BK = window.BK || {};
 (function() {
   var BK = window.BK;
   var currentTab = 'record';
+  var currentMonth = BK.currentMonth();
   var categories = [];
   var transactions = [];
   var mainContent = document.getElementById('main-content');
@@ -30,8 +31,7 @@ window.BK = window.BK || {};
     if (tab === 'record') {
       BK.ui.renderRecordTab(mainContent, transactions, categories);
     } else if (tab === 'stats') {
-      // 待任务 8 实现
-      mainContent.innerHTML = '<div class="empty-state"><div class="icon">📊</div><p>统计功能即将上线</p></div>';
+      BK.ui.renderStatsTab(mainContent, transactions, categories, currentMonth);
     }
   }
 
