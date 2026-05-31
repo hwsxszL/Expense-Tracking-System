@@ -21,7 +21,10 @@
 }
 
 /* ===== 全局重置 ===== */
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* {
+  margin: 0; padding: 0; box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
 
 body {
   font-family: var(--font);
@@ -29,6 +32,8 @@ body {
   color: var(--color-text);
   min-height: 100vh;
   background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* ===== 应用容器 ===== */
@@ -606,7 +611,26 @@ body {
 }
 
 /* ===== 响应式 ===== */
+
+/* 平板端 (≤768px) */
 @media (max-width: 768px) {
+  #app {
+    padding: 16px 12px 32px;
+  }
+
+  .app-header h1 {
+    font-size: 22px;
+  }
+
+  .app-header .subtitle {
+    font-size: 12px;
+  }
+
+  .tab-btn {
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+
   .record-layout {
     flex-direction: column;
   }
@@ -616,11 +640,251 @@ body {
     width: 100%;
   }
 
+  .record-list {
+    min-height: 250px;
+  }
+
   .stats-charts {
     flex-direction: column;
   }
 
   .stats-cards {
+    gap: 10px;
+  }
+
+  .stat-card {
+    padding: 16px 14px;
+  }
+
+  .stat-value {
+    font-size: 22px;
+  }
+
+  .chart-container {
+    min-height: 250px;
+  }
+
+  .chart-container canvas {
+    max-height: 200px;
+  }
+
+  .modal {
+    width: calc(100vw - 32px);
+    max-height: 85vh;
+    padding: 20px;
+    border-radius: 14px;
+  }
+
+  /* 表格在小屏幕上水平滚动 */
+  .record-list {
+    overflow-x: auto;
+  }
+
+  .data-table {
+    min-width: 440px;
+  }
+}
+
+/* 手机端 (≤480px) */
+@media (max-width: 480px) {
+  #app {
+    padding: 12px 8px 24px;
+  }
+
+  .app-header {
+    margin-bottom: 14px;
+  }
+
+  .app-header h1 {
+    font-size: 20px;
+  }
+
+  .tab-bar {
+    margin-bottom: 14px;
+    border-radius: 10px;
+  }
+
+  .tab-btn {
+    padding: 10px 12px;
+    font-size: 13px;
+    border-radius: 8px;
+  }
+
+  .tab-btn .tab-icon {
+    margin-right: 3px;
+    font-size: 14px;
+  }
+
+  .card {
+    padding: 14px;
+    border-radius: 10px;
+  }
+
+  .form-group {
+    margin-bottom: 10px;
+  }
+
+  .form-group label {
+    font-size: 11px;
+  }
+
+  .form-group input,
+  .form-group select {
+    padding: 12px 14px;       /* 大号触摸目标 */
+    font-size: 16px;          /* 防止 iOS 缩放 */
+  }
+
+  .btn {
+    padding: 12px 18px;
+    font-size: 15px;
+  }
+
+  .btn-primary {
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+  }
+
+  .btn-danger {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .type-btn {
+    padding: 12px 0;
+    font-size: 14px;
+  }
+
+  .record-layout {
+    gap: 12px;
+  }
+
+  .record-form {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .record-form h3 {
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+
+  .record-list {
+    min-height: 200px;
+  }
+
+  .record-list h3 {
+    font-size: 16px;
+  }
+
+  .data-table th,
+  .data-table td {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  /* 统计卡片竖排 */
+  .stats-cards {
     flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .stat-card {
+    padding: 14px;
+  }
+
+  .stat-card .stat-icon {
+    font-size: 22px;
+  }
+
+  .stat-value {
+    font-size: 20px;
+  }
+
+  .stats-charts {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .chart-container {
+    min-height: 220px;
+  }
+
+  .chart-container canvas {
+    max-height: 180px;
+  }
+
+  /* 排行压缩 */
+  .rank-label {
+    width: 70px;
+    font-size: 12px;
+  }
+
+  .rank-amount {
+    width: 70px;
+    font-size: 12px;
+  }
+
+  .rank-pct {
+    width: 40px;
+    font-size: 11px;
+  }
+
+  .ranking-item {
+    padding: 8px 0;
+    gap: 6px;
+  }
+
+  .month-select-wrap select {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 16px;
+  }
+
+  /* 弹窗全屏 */
+  .modal-overlay {
+    align-items: flex-end;
+  }
+
+  .modal {
+    width: 100vw;
+    max-height: 90vh;
+    border-radius: 16px 16px 0 0;
+    padding: 20px 16px;
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+
+  /* 弹窗内表单 */
+  .modal #new-cat-type,
+  .modal #new-cat-icon,
+  .modal #new-cat-name {
+    padding: 10px;
+    font-size: 16px;
+  }
+
+  .category-tag {
+    padding: 8px 14px;
+    font-size: 14px;
+  }
+
+  .cat-delete {
+    width: 24px;
+    height: 24px;
+    font-size: 18px;
+  }
+
+  /* 空状态 */
+  .empty-state {
+    padding: 40px 16px;
+  }
+
+  .empty-state .icon {
+    font-size: 48px;
   }
 }
