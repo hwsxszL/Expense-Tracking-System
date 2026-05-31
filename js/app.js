@@ -14,7 +14,6 @@ window.BK = window.BK || {};
     transactions = BK.loadTransactions();
     switchTab('record');
 
-    // Tab 点击事件
     document.querySelectorAll('.tab-btn').forEach(function(btn) {
       btn.addEventListener('click', function() {
         switchTab(this.dataset.tab);
@@ -28,6 +27,10 @@ window.BK = window.BK || {};
       btn.classList.toggle('active', btn.dataset.tab === tab);
     });
 
+    // 刷新数据（可能被弹窗修改）
+    transactions = BK.loadTransactions();
+    categories = BK.loadCategories();
+
     if (tab === 'record') {
       BK.ui.renderRecordTab(mainContent, transactions, categories);
     } else if (tab === 'stats') {
@@ -36,8 +39,6 @@ window.BK = window.BK || {};
   }
 
   window.BK.refreshUI = function() {
-    transactions = BK.loadTransactions();
-    categories = BK.loadCategories();
     switchTab(currentTab);
   };
 
