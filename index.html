@@ -13,10 +13,43 @@
     <div class="login-card">
       <div class="login-icon">💸</div>
       <h1>记账小系统</h1>
-      <p class="login-subtitle">设置你的专属密码，随时随地记账</p>
-      <input type="password" id="passphrase-input" placeholder="输入密码" autofocus maxlength="50">
-      <button class="btn btn-primary" id="btn-login">进入</button>
-      <p class="login-hint">密码就是你的钥匙，换了设备用同一密码就能看到数据</p>
+      <p class="login-subtitle">随时随地，轻松记账</p>
+
+      <!-- 登录/注册 Tab -->
+      <div class="login-tabs">
+        <button class="login-tab-btn active" data-login-tab="login">登录</button>
+        <button class="login-tab-btn" data-login-tab="register">注册</button>
+      </div>
+
+      <!-- 登录表单 -->
+      <div class="login-form" id="login-form">
+        <input type="text" id="login-account" placeholder="账号（8位数字）" autofocus maxlength="8" inputmode="numeric" pattern="[0-9]*">
+        <input type="password" id="login-password" placeholder="输入密码" maxlength="50">
+        <button class="btn btn-primary" id="btn-login">进入</button>
+        <p class="login-error hidden" id="login-error"></p>
+      </div>
+
+      <!-- 注册表单 -->
+      <div class="login-form hidden" id="register-form">
+        <input type="password" id="register-password" placeholder="设置密码（至少3位）" maxlength="50">
+        <input type="text" id="register-nickname" placeholder="选填，如：小明" maxlength="12">
+        <button class="btn btn-primary" id="btn-register">注册</button>
+        <p class="login-error hidden" id="register-error"></p>
+      </div>
+
+      <p class="login-hint">注册后系统自动分配 8 位账号，请截图保存</p>
+    </div>
+  </div>
+
+  <!-- 注册成功弹窗 -->
+  <div class="modal-overlay hidden" id="register-success-modal">
+    <div class="modal" style="text-align:center;">
+      <div style="font-size:48px;margin-bottom:12px;">🎉</div>
+      <h3>注册成功！</h3>
+      <p style="margin:12px 0;color:var(--color-subtext);">你的账号是</p>
+      <p style="font-size:32px;font-weight:700;letter-spacing:4px;color:var(--color-primary);margin:12px 0;" id="new-account-display"></p>
+      <p style="font-size:13px;color:var(--color-expense);margin-bottom:16px;">⚠️ 请截图保存，丢失无法找回</p>
+      <button class="btn btn-primary" id="btn-goto-login" style="width:100%;">知道了，去登录</button>
     </div>
   </div>
 
@@ -24,7 +57,16 @@
   <div id="app" class="hidden">
     <header class="app-header">
       <h1>💸 记账小系统</h1>
-      <p class="subtitle">轻松记录每一笔收支</p>
+      <p class="subtitle" id="header-subtitle">
+        <span id="header-name-display" style="cursor:pointer;font-weight:600;" title="点击修改昵称"></span>
+        <span id="header-name-edit-icon" style="cursor:pointer;font-size:11px;color:var(--color-subtext);margin-left:2px;display:none;" title="点击修改昵称">✎</span>
+        <span id="header-name-editor" style="display:none;">
+          <input type="text" id="header-name-input" maxlength="12" style="width:120px;padding:2px 6px;font-size:13px;border:1px solid var(--color-border);border-radius:4px;">
+          <button id="header-name-save" style="padding:2px 6px;font-size:12px;cursor:pointer;">💾</button>
+          <button id="header-name-cancel" style="padding:2px 6px;font-size:12px;cursor:pointer;">✕</button>
+        </span>
+        <span> · 轻松记录每一笔收支</span>
+      </p>
     </header>
     <nav class="tab-bar">
       <button class="tab-btn active" data-tab="record">
