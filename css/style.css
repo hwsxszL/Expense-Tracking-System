@@ -248,3 +248,30 @@ body {
   background: var(--color-income);
   color: #fff;
 }
+
+/* 分类标签 */
+.category-tag {
+  display: inline-flex;
+  align-items: center;
+  background: #f0f4ff;
+  padding: 4px 10px;
+  border-radius: 4px;
+  margin: 2px;
+  font-size: 13px;
+}
+
+.category-tag.preset {
+  background: #fafafa;
+  border: 1px solid var(--color-border);
+}
+
+.cat-delete {
+  cursor: pointer;
+  margin-left: 4px;
+  color: var(--color-subtext);
+  font-weight: bold;
+}
+
+.cat-delete:hover {
+  color: var(--color-expense);
+}
