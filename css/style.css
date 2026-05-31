@@ -771,11 +771,30 @@ body {
   }
 
   .record-list {
-    min-height: 200px;
+    min-height: auto;
+    overflow-x: auto;
   }
 
   .record-list h3 {
     font-size: 16px;
+  }
+
+  /* 空状态在手机端居中 */
+  .record-list .empty-state {
+    padding: 50px 16px;
+  }
+
+  .record-list .empty-state .icon {
+    font-size: 56px;
+  }
+
+  .record-list .empty-state p {
+    font-size: 14px;
+  }
+
+  .record-list .empty-state .hint {
+    font-size: 13px;
+    color: #cbd5e1;
   }
 
   .data-table th,

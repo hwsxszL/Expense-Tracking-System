@@ -64,8 +64,8 @@ window.BK.ui = window.BK.ui || {};
     if (!transactions || transactions.length === 0) {
       return '<div class="empty-state">' +
         '<span class="icon">📝</span>' +
-        '<p>还没有记录，记下第一笔吧！</p>' +
-        '<p class="hint">在左侧填写金额和分类，开始记账</p>' +
+        '<p>还没有记录</p>' +
+        '<p class="hint">记下第一笔吧！</p>' +
         '</div>';
     }
 
